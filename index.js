@@ -1,8 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
+import userRoute from "./routes/user.js";
 import "dotenv/config";
 
 const app = express();
+
+app.use(express.json());
+
+app.use("/users", userRoute);
+
+app.use((req, res) => {
+    return res.status(404).json({ response: "Endpoint does not exist!" })
+});
 
 mongoose
     .connect(process.env.DB_CONNECTION)
