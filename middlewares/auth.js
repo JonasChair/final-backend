@@ -7,7 +7,7 @@ const authenticateUser = (req, res, next) => {
         if (err){
             return res.status(401).json({ message: "Please login again."});
         }
-        req.body.userId = decoded.userId;
+        req.body.user_id = decoded.user_id;
         return next();
     });
 };
