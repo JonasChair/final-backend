@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 import userRoute from "./routes/user.js";
 import questionRoute from "./routes/question.js";
 import "dotenv/config";
@@ -7,8 +8,10 @@ import "dotenv/config";
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
-app.use("/users", userRoute);
+
+app.use("", userRoute);
 app.use("/questions", questionRoute);
 
 app.use((req, res) => {

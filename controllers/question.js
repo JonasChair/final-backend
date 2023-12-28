@@ -1,5 +1,6 @@
 import QuestionModel from "../models/question.js";
 import AnswerModel from "../models/answer.js";
+import mongoose from "mongoose";
 
 const POST_QUESTION = async (req, res) => {
     try {
@@ -108,4 +109,27 @@ const DELETE_ANSWER = async (req, res) => {
     }
 }
 
-export { POST_QUESTION, DELETE_QUESTION, GET_ALL_QUESTIONS, POST_ANSWER, DELETE_ANSWER }
+const GET_QUESTION_WITH_ANSWERS = async (req, res) => {
+    try {
+        const question = await QuestionModel.aggregate([
+            {
+                $lookup:{
+                    from: "answers",
+                    localField: "id",
+                    foreignField: "question_id",
+                    as: "question_answers",
+                },
+            },
+            {$match: { _id: new mongoose.Types.ObjectId(req.params.id)}}
+        ])
+
+        return res.status(200).json({ question });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Something went wrong." });
+    }
+
+}
+
+export { POST_QUESTION, DELETE_QUESTION, GET_ALL_QUESTIONS, POST_ANSWER, DELETE_ANSWER, GET_QUESTION_WITH_ANSWERS }
